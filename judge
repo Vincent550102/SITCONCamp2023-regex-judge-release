@@ -1,0 +1,42 @@
+#!/bin/bash
+
+level=${1:-"1"}
+if [[ $level -lt 1 || $level -gt 4 ]]; then
+    echo "關卡請輸入 1-4！"
+    exit -1
+fi
+echo "關卡 $level"
+echo "請輸入您的正則表達式"
+read -re regex
+
+testcases_dir="testcase"
+
+while IFS= read -r line; do
+    line=$(echo -n "$line" | tr -d '\n')
+    if [[ -n "$line" && ! $(echo "$line" | grep -E "^$regex$") ]]; then
+        echo "Failed accept testcase（該匹配卻沒匹配到）: $line"
+        exit 1
+    fi
+done < "$testcases_dir/$level.accept"
+
+
+while IFS= read -r line; do
+    line=$(echo -n "$line" | tr -d '\n')
+    if [[ -n "$line" && $(echo "$line" | grep -E "^$regex$") ]]; then
+        echo "Failed reject testcase（不該匹配卻匹配到）: $line"
+        exit 1
+    fi
+done < "$testcases_dir/$level.reject"
+
+echo "All testcases passed"
+if [[ $level -eq 2 ]]; then
+    keyword="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    echo "記得掃資訊技能樹 QR code喔～"
+fi
+if [[ $level -eq 3 ]]; then
+    keyword="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+fi
+if [[ $level -eq 4 ]]; then
+    keyword="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+fi
+echo "Keyword: $(echo "$keyword" | base64 -d)"

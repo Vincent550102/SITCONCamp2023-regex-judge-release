@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "輸入待匹配字串"
+read -re target
+echo "請輸入您的正則表達式"
+read -re regex
+
+echo "$target" | grep --color=auto -E "$regex"
